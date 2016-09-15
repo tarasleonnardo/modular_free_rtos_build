@@ -34,7 +34,7 @@ BLINKY_LIB_OBJ := $(notdir $(BLINKY_LIB_SRC:.c=.o))
 
 # Target to build the library
 $(BLINKY_BUILD_DIR)/blinky.a: $(BLINKY_LIB_SRC) $($(BLINKY_DEP_KERNEL)_HEADERS) $($(BLINKY_DEP_PLATFORM)_HEADERS)
-	echo "Make application lib in $(BLINKY_BUILD_DIR)"
+	echo "Application lib directory $(BLINKY_BUILD_DIR)."
 	-mkdir $(BLINKY_BUILD_DIR) -p $(SUPPRESS_ERRORS)
 	cd $(BLINKY_BUILD_DIR) && \
 	echo Compiling ... && \

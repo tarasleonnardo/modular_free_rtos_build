@@ -30,7 +30,7 @@ FREERTOS_LIB_OBJ := $(notdir $(FreeRTOS_SRC:.c=.o))
 
 # Target to build the library
 $(FREERTOS_BUILD_DIR)/FreeRTOS.a: $(FreeRTOS_SRC) $($(FREERTOS_DEP_KERNEL)_HEADERS)
-	echo "Make FreeRTOS lib in $(FREERTOS_BUILD_DIR)"
+	echo "FreeRTOS lib directory: $(FREERTOS_BUILD_DIR)."
 	-mkdir $(FREERTOS_BUILD_DIR) -p $(SUPPRESS_ERRORS)
 	cd $(FREERTOS_BUILD_DIR) && \
 	echo Compiling ... && \

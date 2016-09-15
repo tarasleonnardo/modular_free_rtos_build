@@ -13,8 +13,9 @@
 #                                                           #
 #############################################################
 #############################################################
+.PHONY: clean rebuild
 
-#.SILENT:
+.SILENT:
 #############################################################
 # Common toolchain settings
 TOOLCHAIN_PREF = arm-none-eabi-
@@ -37,7 +38,7 @@ A_FLAGS:= -x assembler
 #############################################################
 
 # Suppress printing of the shell commands errors
-SUPPRESS_ERRORS := > 2 > /dev/null
+SUPPRESS_ERRORS1 := > 2 > /dev/null
 
 # The name of the executable. The extentions of .elf and hex
 # will be added later
@@ -76,15 +77,25 @@ TARGET_LIBS := $(TARGET_BUILD_DIRECTORY)/$(TARGET_APP)/$(TARGET_APP).a \
 #               $(TARGET_BUILD_DIRECTORY)/$(TARGET_ARCH)/$(TARGET_ARCH).a
 
 #$(TARGET_APP).a $(TARGET_KERNEL).a $(TARGET_ARCH).a $(TARGET_PLATFORM).a
+.PHONY: all
 all: $(TARGET_LIBS)
+	echo "Prerequesities: $(notdir $^)"
 	echo "Linker script: $(LD_SCRIPT)"
-	echo "Linking the executable $(TARGET_LIBS)"
+	echo "Libraries:  $(TARGET_LIBS)"
+	echo "Linking the executable..."
 	-@mkdir $(TARGET_BUILD_DIRECTORY) -p $(SUPPRESS_ERRORS)
 	cd $(TARGET_BUILD_DIRECTORY) && \
 	$(LD) -Wl,$(L_FLAGS) -T $(LD_SCRIPT) -o $(TARGET_APP).elf -Wl,--start-group $(TARGET_LIBS) -lc -Wl,--end-group -L $(LD_LIB_PATH) && \
-	echo Creating $(TARGET_APP).hex && \
+	echo "Creating $(TARGET_APP).hex ..." && \
 	$(OBJCOPY) -O ihex $(TARGET_APP).elf $(TARGET_APP).hex
+	echo Success.
 
+
+clean:
+	echo Deleting target build files...
+	-rm -r $(TARGET_BUILD_DIRECTORY)
+
+rebuild: clean $(TARGET_BUILD_DIRECTORY)/$(TARGET_APP).hex
 
 
 # Include target modules

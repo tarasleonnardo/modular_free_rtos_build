@@ -34,7 +34,7 @@ PLATFORM_STARTUP_O := startup_stm32l1xx_md.sO
 
 # Target to build the library
 $(PLATFORM_BUILD_DIR)/STM32L152.a: $(PLATFORM_LIB_SRC) $($(PLATFORM_DEP_KERNEL)_HEADERS) $($(PLATFORM_DEP_PLATFORM)_HEADERS) $(PLATFORM_BUILD_DIR)/$(PLATFORM_STARTUP_O)
-	echo "Make platform specific files lib in $(PLATFORM_BUILD_DIR)"
+	echo "Platform specific lib directory $(PLATFORM_BUILD_DIR)."
 	-mkdir $(PLATFORM_BUILD_DIR) -p $(SUPPRESS_ERRORS)
 	cd $(PLATFORM_BUILD_DIR) && \
 	echo Compiling ... && \

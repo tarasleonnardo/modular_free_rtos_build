@@ -28,7 +28,7 @@ ARCH_LIB_OBJ := $(notdir $(ARCH_LIB_SRC:.c=.o))
 
 # Target to build the library
 $(ARCH_BUILD_DIR)/ARM_CM3.a: $(ARCH_LIB_SRC) $($(ARCH_DEP_KERNEL)_HEADERS) $($(ARCH_DEP_PLATFORM)_HEADERS)
-	echo "Make architecture specific if needed files lib in $(ARCH_BUILD_DIR)"
+	echo "Architecture specific lib directory: $(ARCH_BUILD_DIR)."
 #	-mkdir $(ARCH_BUILD_DIR) -p $(SUPPRESS_ERRORS)
 #	cd $(ARCH_BUILD_DIR) && \
 #	echo Compiling ... && \
