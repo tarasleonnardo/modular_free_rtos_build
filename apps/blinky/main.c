@@ -73,7 +73,7 @@ static void prvBTNTask( void *pvParameters )
 				item = 1;
 			}
 
-			vTaskDelay(200);
+			vTaskDelay(100);
 		}
 		vTaskDelay(50);
 	  }
@@ -93,9 +93,9 @@ static void prvLEDTask( void *pvParameters )
 			  while(buf--)
 			  {
 				  GPIOA->ODR |= 1 << 5;
-				  vTaskDelay(300);
+				  vTaskDelay(50);
 				  GPIOA->ODR &= ~(1 << 5);
-				  vTaskDelay(700);
+				  vTaskDelay(300);
 			  }
 		  }else
 		  {
