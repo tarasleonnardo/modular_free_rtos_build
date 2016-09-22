@@ -127,10 +127,6 @@ rebuild: clean all
 
 .PHONY: all clean rebuild $(PROJECT_PREREQUISITIES)
 
-
-
-
-
 #############################################################
 #           Include dependencies targets                    #
 #############################################################
