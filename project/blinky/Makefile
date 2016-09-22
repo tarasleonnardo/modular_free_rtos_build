@@ -64,6 +64,8 @@ PROJECT_PLATFORM := STM32L152
 
 PROJECT_SUB_PLATFORM := STM32L152
 
+#PROJECT_DRIVERS := STM32L1xx_STD_PERIPH
+
 #############################################################
 
 PROJECT_DIRECTORY := $(shell pwd)/../..
@@ -73,6 +75,7 @@ PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 PROJECT_PREREQUISITIES:= $(if PROJECT_APP,application)
 PROJECT_PREREQUISITIES+= $(if PROJECT_KERNEL,kernel)
 PROJECT_PREREQUISITIES+= $(if PROJECT_PLATFORM,platform)
+PROJECT_PREREQUISITIES+= $(if PROJECT_DRIVERS,drivers)
 
 #############################################################
 #                 Project variables                         #
@@ -100,6 +103,10 @@ include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM
 endif
 endif
 
+ifdef PROJECT_DRIVERS
+include $(PROJECT_DIRECTORY)/drivers/$(PROJECT_DRIVERS)/$(PROJECT_DRIVERS)_inc.mk
+endif
+
 #############################################################
 
 PROJECT_DEP_LIBS := $($(PROJECT_APP)_LIB_NAME) $($(PROJECT_KERNEL)_LIB_NAME) $($(PROJECT_SUB_PLATFORM)_LIB_NAME)
@@ -107,6 +114,7 @@ PROJECT_LD_SCRIPT := $(if PROJECT_SUB_PLATFORM,$(PROJECT_DIRECTORY)/platform/$(P
 
 
 all: $(PROJECT_PREREQUISITIES)
+	$(NOECHO) echo "Prerequisities:$(PROJECT_PREREQUISITIES)"
 	$(NOECHO) echo "Lib dir: $(PROJECT_LIB_DIR)"
 	$(NOECHO) echo "Libraries $(PROJECT_DEP_LIBS)"
 	$(NOECHO) echo "Linking the executable $(PROJECT_NAME).elf..."
@@ -143,4 +151,8 @@ ifdef PROJECT_PLATFORM
 ifdef PROJECT_SUB_PLATFORM
 include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_bld.mk
 endif
+endif
+
+ifdef PROJECT_DRIVERS
+include $(PROJECT_DIRECTORY)/drivers/$(PROJECT_DRIVERS)/$(PROJECT_DRIVERS)_bld.mk
 endif
