@@ -9,8 +9,8 @@
 FreeRTOS_INCLUDE_DIRS := $(PROJECT_DIRECTORY)/kernel/FreeRTOS \
                          $(PROJECT_DIRECTORY)/kernel/FreeRTOS/Source/include
 
-ifdef TARGET_ARCH
-FreeRTOS_INCLUDE_DIRS += $(PROJECT_DIRECTORY)/kernel/FreeRTOS/Source/portable/GCC/$(TARGET_ARCH)
+ifdef PROJECT_ARCH
+FreeRTOS_INCLUDE_DIRS += $(PROJECT_DIRECTORY)/kernel/FreeRTOS/Source/portable/GCC/$(PROJECT_ARCH)
 endif
 
 FreeRTOS_LIB_NAME := FreeRTOS.a

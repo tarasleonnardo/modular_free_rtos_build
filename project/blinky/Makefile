@@ -52,27 +52,27 @@ NOECHO ?= @
 #                  Target dependencies                      # 
 #############################################################
 
-TARGET_NAME := blinky
+PROJECT_NAME := blinky
 
-TARGET_APP := blinky
+PROJECT_APP := blinky
 
-TARGET_ARCH := ARM_CM3
+PROJECT_ARCH := ARM_CM3
 
-TARGET_KERNEL := FreeRTOS
+PROJECT_KERNEL := FreeRTOS
 
-TARGET_PLATFORM := STM32L152
+PROJECT_PLATFORM := STM32L152
 
-TARGET_SUB_PLATFORM := STM32L152
+PROJECT_SUB_PLATFORM := STM32L152
 
 #############################################################
 
 PROJECT_DIRECTORY := $(shell pwd)/../..
-PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(TARGET_NAME)
+PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 
 
-TARGET_PREREQUISITIES:= $(if TARGET_APP,application)
-TARGET_PREREQUISITIES+= $(if TARGET_KERNEL,kernel)
-TARGET_PREREQUISITIES+= $(if TARGET_PLATFORM,platform)
+PROJECT_PREREQUISITIES:= $(if PROJECT_APP,application)
+PROJECT_PREREQUISITIES+= $(if PROJECT_KERNEL,kernel)
+PROJECT_PREREQUISITIES+= $(if PROJECT_PLATFORM,platform)
 
 #############################################################
 #                 Project variables                         #
@@ -80,41 +80,41 @@ TARGET_PREREQUISITIES+= $(if TARGET_PLATFORM,platform)
 
 # Directory for temporal files and executable
 
-PROJECT_BUILD_DIRECTORY := $(PROJECT_DIRECTORY)/build/$(TARGET_NAME)
+PROJECT_BUILD_DIRECTORY := $(PROJECT_DIRECTORY)/build/$(PROJECT_NAME)
 
 #############################################################
 #            Include dependencies inc                       #
 #############################################################
 
-ifdef TARGET_APP
-include $(PROJECT_DIRECTORY)/apps/$(TARGET_APP)/$(TARGET_APP)_inc.mk
+ifdef PROJECT_APP
+include $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/$(PROJECT_APP)_inc.mk
 endif
 
-ifdef TARGET_KERNEL
-include $(PROJECT_DIRECTORY)/kernel/$(TARGET_KERNEL)/$(TARGET_KERNEL)_inc.mk
+ifdef PROJECT_KERNEL
+include $(PROJECT_DIRECTORY)/kernel/$(PROJECT_KERNEL)/$(PROJECT_KERNEL)_inc.mk
 endif
 
-ifdef TARGET_PLATFORM
-ifdef TARGET_SUB_PLATFORM
-include $(PROJECT_DIRECTORY)/platform/$(TARGET_PLATFORM)/$(TARGET_SUB_PLATFORM)/$(TARGET_SUB_PLATFORM)_inc.mk
+ifdef PROJECT_PLATFORM
+ifdef PROJECT_SUB_PLATFORM
+include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_inc.mk
 endif
 endif
 
 #############################################################
 
-TARGET_DEP_LIBS := $($(TARGET_APP)_LIB_NAME) $($(TARGET_KERNEL)_LIB_NAME) $($(TARGET_SUB_PLATFORM)_LIB_NAME)
-TARGET_LD_SCRIPT := $(if TARGET_SUB_PLATFORM,$(PROJECT_DIRECTORY)/platform/$(TARGET_PLATFORM)/$(TARGET_SUB_PLATFORM)/$($(TARGET_SUB_PLATFORM)_LD_SCRIPT))
+PROJECT_DEP_LIBS := $($(PROJECT_APP)_LIB_NAME) $($(PROJECT_KERNEL)_LIB_NAME) $($(PROJECT_SUB_PLATFORM)_LIB_NAME)
+PROJECT_LD_SCRIPT := $(if PROJECT_SUB_PLATFORM,$(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$($(PROJECT_SUB_PLATFORM)_LD_SCRIPT))
 
 
-all: $(TARGET_PREREQUISITIES)
+all: $(PROJECT_PREREQUISITIES)
 	$(NOECHO) echo "Lib dir: $(PROJECT_LIB_DIR)"
-	$(NOECHO) echo "Libraries $(TARGET_DEP_LIBS)"
-	$(NOECHO) echo "Linking the executable $(TARGET_NAME).elf..."
+	$(NOECHO) echo "Libraries $(PROJECT_DEP_LIBS)"
+	$(NOECHO) echo "Linking the executable $(PROJECT_NAME).elf..."
 	$(NOECHO) -@mkdir $(PROJECT_BUILD_DIRECTORY) -p $(SUPPRESS_ERRORS)
 	$(NOECHO) cd $(PROJECT_BUILD_DIRECTORY) && \
-	          $(CC) -Wl,$(L_FLAGS) -T$(TARGET_LD_SCRIPT) -o $(TARGET_NAME).elf -Wl,--start-group $(addprefix $(PROJECT_LIB_DIR)/,$(TARGET_DEP_LIBS)) -lc -Wl,--end-group $(addprefix -L,$(LD_LIB_PATH)) && \
-	          echo "Creating $(TARGET_APP).hex ..." && \
-	          $(OBJCOPY) -O ihex $(TARGET_APP).elf $(TARGET_APP).hex && \
+	          $(CC) -Wl,$(L_FLAGS) -T$(PROJECT_LD_SCRIPT) -o $(PROJECT_NAME).elf -Wl,--start-group $(addprefix $(PROJECT_LIB_DIR)/,$(PROJECT_DEP_LIBS)) -lc -Wl,--end-group $(addprefix -L,$(LD_LIB_PATH)) && \
+	          echo "Creating $(PROJECT_APP).hex ..." && \
+	          $(OBJCOPY) -O ihex $(PROJECT_APP).elf $(PROJECT_APP).hex && \
 	          echo Success.
 
 #############################################################
@@ -125,7 +125,7 @@ clean:
 
 rebuild: clean all
 
-.PHONY: all clean rebuild $(TARGET_PREREQUISITIES)
+.PHONY: all clean rebuild $(PROJECT_PREREQUISITIES)
 
 
 
@@ -135,16 +135,16 @@ rebuild: clean all
 #           Include dependencies targets                    #
 #############################################################
 
-ifdef TARGET_KERNEL
-include $(PROJECT_DIRECTORY)/kernel/$(TARGET_KERNEL)/$(TARGET_KERNEL)_bld.mk
+ifdef PROJECT_KERNEL
+include $(PROJECT_DIRECTORY)/kernel/$(PROJECT_KERNEL)/$(PROJECT_KERNEL)_bld.mk
 endif
 
-ifdef TARGET_APP
-include $(PROJECT_DIRECTORY)/apps/$(TARGET_APP)/$(TARGET_APP)_bld.mk
+ifdef PROJECT_APP
+include $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/$(PROJECT_APP)_bld.mk
 endif
 
-ifdef TARGET_PLATFORM
-ifdef TARGET_SUB_PLATFORM
-include $(PROJECT_DIRECTORY)/platform/$(TARGET_PLATFORM)/$(TARGET_SUB_PLATFORM)/$(TARGET_SUB_PLATFORM)_bld.mk
+ifdef PROJECT_PLATFORM
+ifdef PROJECT_SUB_PLATFORM
+include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_bld.mk
 endif
 endif

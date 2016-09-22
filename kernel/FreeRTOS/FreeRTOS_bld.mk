@@ -35,5 +35,5 @@ $(FreeRTOS_BLD_DIR)/$(FreeRTOS_LIB_NAME): $(FreeRTOS_SRC) $(FreeRTOS_HEADERS)
 	          $(OBJCOPY) --localize-hidden FreeRTOS_OBJ.o && \
 	          echo "Archiving the library $(FreeRTOS_LIB_NAME) ..." && \
 	          $(AR) rcs -o $(FreeRTOS_LIB_NAME) FreeRTOS_OBJ.o && \
-	          mkdir $(PROJECT_DIRECTORY)/lib/$(TARGET_NAME) -p && \
-	          mv $(FreeRTOS_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(TARGET_NAME)
+	          mkdir $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME) -p && \
+	          mv $(FreeRTOS_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
