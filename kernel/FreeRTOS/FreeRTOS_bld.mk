@@ -27,11 +27,11 @@ FreeRTOS_OBJ := $(FreeRTOS_SRC_C:.c=.o)
 FreeRTOS_BLD_DIR := $(PROJECT_BUILD_DIRECTORY)/FreeRTOS
 
 # The target to build kernel library
-kernel: $(FreeRTOS_BLD_DIR)/$(FreeRTOS_LIB_NAME)
+FreeRTOS_bld.mk: $(PROJECT_LIB_DIR)/$(FreeRTOS_LIB_NAME)
 	$(NOECHO) echo "Success!"
 
 
-$(FreeRTOS_BLD_DIR)/$(FreeRTOS_LIB_NAME): $(FreeRTOS_SRC) $(FreeRTOS_HEADERS)
+$(PROJECT_LIB_DIR)/$(FreeRTOS_LIB_NAME): $(FreeRTOS_SRC) $(FreeRTOS_HEADERS)
 	$(NOECHO) echo "Building kernel $(FreeRTOS_LIB_NAME) ..."
 	$(NOECHO) -mkdir $(FreeRTOS_BLD_DIR) -p
 	$(NOECHO) cd $(FreeRTOS_BLD_DIR) && \

@@ -1,14 +1,14 @@
 #############################################################
 #############################################################
 #                                                           #
-#                  Target makefile                          # 
+#                  Target makefile                          #
 #                                                           #
 #############################################################
 #############################################################
 #                                                           #
 #      The perposes of this fiel are:                       #
 #       -define necessary options                           #
-#       -include the makefiles of all modules               # 
+#       -include the makefiles of all modules               #
 #       -link the target                                    #
 #                                                           #
 #############################################################
@@ -27,7 +27,6 @@ AR=$(TOOLCHAIN_PREF)ar
 OBJCOPY=$(TOOLCHAIN_PREF)objcopy
 
 # Add this potion to C_FLAGS to see additional info
-# -fmem-report
 
 C_FLAGS := -g -O0 -Wall -mthumb -mcpu=cortex-m3 -ffunction-sections -fdata-sections
 
@@ -36,81 +35,59 @@ LD_LIB_PATH := /usr/arm-none-eabi/lib/thumb
 A_FLAGS:= -x assembler
 
 #############################################################
-#############################################################
-
-# Suppress printing of the shell commands errors
-SUPPRESS_ERRORS ?= # > 2 > /dev/null
-NOECHO ?= @
-
-#############################################################
-#                  Target dependencies                      # 
-#############################################################
-
-PROJECT_NAME := led_switcher
-
-PROJECT_APP := led_switcher
-
-PROJECT_ARCH := ARM_CM3
-
-PROJECT_KERNEL := FreeRTOS
-
-PROJECT_PLATFORM := STM32L152
-
-PROJECT_SUB_PLATFORM := STM32L152
-
-PROJECT_DRIVERS := STM32L1xx_STD_PERIPH
-
-#############################################################
-
-PROJECT_DIRECTORY := $(shell pwd)/../..
-PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
-
-
-PROJECT_PREREQUISITIES:= $(if PROJECT_APP,application)
-PROJECT_PREREQUISITIES+= $(if PROJECT_KERNEL,kernel)
-PROJECT_PREREQUISITIES+= $(if PROJECT_PLATFORM,platform)
-PROJECT_PREREQUISITIES+= $(if PROJECT_DRIVERS,drivers)
-
-#############################################################
 #                 Project variables                         #
 #############################################################
+NOECHO ?= @
 
-# Directory for temporal files and executable
-
+PROJECT_NAME := led_switcher
+PROJECT_DIRECTORY := $(shell pwd)/../..
+PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 PROJECT_BUILD_DIRECTORY := $(PROJECT_DIRECTORY)/build/$(PROJECT_NAME)
+
+# This variable will be assigned in the included makefile
+PROJECT_DEP_LIBS :=
+# This variable will be assigned in the included makefile
+PROJECT_LD_SCRIPT :=
+#############################################################
+#                  Target dependencies                      #
+#############################################################
+
+PROJECT_APP_INC := app/led_switcher/led_switcher_inc.mk
+PROJECT_ARCH_INC := arch/ARM_CM3/ARM_CM3_inc.mk
+PROJECT_KERNEL_INC := kernel/FreeRTOS/FreeRTOS_inc.mk
+PROJECT_DRIVERS_INC := drivers/STM32L1xx_STD_PERIPH/led_driver/led_driver_inc.mk
+PROJECT_PLATFORM_INC := platform/STM32L152/STM32L152/STM32L152_inc.mk
+
+PROJECT_APP_BLD := app/led_switcher/led_switcher_bld.mk
+PROJECT_ARCH_BLD := arch/ARM_CM3/ARM_CM3_bld.mk
+PROJECT_KERNEL_BLD := kernel/FreeRTOS/FreeRTOS_bld.mk
+PROJECT_PLATFORM_BLD := platform/STM32L152/STM32L152/STM32L152_bld.mk
+PROJECT_DRIVERS_BLD := drivers/STM32L1xx_STD_PERIPH/led_driver/led_driver_bld.mk
+
+#############################################################
+
+PROJECT_PREREQUISITIES:= $(notdir $(PROJECT_APP_BLD))
+PROJECT_PREREQUISITIES+= $(notdir $(PROJECT_ARCH_BLD))
+PROJECT_PREREQUISITIES+= $(notdir $(PROJECT_KERNEL_BLD))
+PROJECT_PREREQUISITIES+= $(notdir $(PROJECT_PLATFORM_BLD))
+PROJECT_PREREQUISITIES+= $(notdir $(PROJECT_DRIVERS_BLD))
 
 #############################################################
 #            Include dependencies inc                       #
 #############################################################
 
-ifdef PROJECT_APP
-include $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/$(PROJECT_APP)_inc.mk
-endif
-
-ifdef PROJECT_KERNEL
-include $(PROJECT_DIRECTORY)/kernel/$(PROJECT_KERNEL)/$(PROJECT_KERNEL)_inc.mk
-endif
-
-ifdef PROJECT_PLATFORM
-ifdef PROJECT_SUB_PLATFORM
-include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_inc.mk
-endif
-endif
-
-ifdef PROJECT_DRIVERS
-include $(PROJECT_DIRECTORY)/drivers/$(PROJECT_DRIVERS)/$(PROJECT_DRIVERS)_inc.mk
-endif
+include $(PROJECT_DIRECTORY)/$(PROJECT_APP_INC)
+include $(PROJECT_DIRECTORY)/$(PROJECT_ARCH_INC)
+include $(PROJECT_DIRECTORY)/$(PROJECT_KERNEL_INC)
+include $(PROJECT_DIRECTORY)/$(PROJECT_PLATFORM_INC)
+include $(PROJECT_DIRECTORY)/$(PROJECT_DRIVERS_INC)
 
 #############################################################
 
-PROJECT_DEP_LIBS := $($(PROJECT_APP)_LIB_NAME) $($(PROJECT_KERNEL)_LIB_NAME) $($(PROJECT_SUB_PLATFORM)_LIB_NAME) $($(PROJECT_DRIVERS)_LIB_NAME)
-PROJECT_LD_SCRIPT := $(if PROJECT_SUB_PLATFORM,$(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$($(PROJECT_SUB_PLATFORM)_LD_SCRIPT))
-
-
-all: $(PROJECT_PREREQUISITIES)
-	$(NOECHO) echo "Prerequisities:$(PROJECT_PREREQUISITIES)"
-	$(NOECHO) echo "Lib dir: $(PROJECT_LIB_DIR)"
-	$(NOECHO) echo "Libraries $(PROJECT_DEP_LIBS)"
+all:$(PROJECT_PREREQUISITIES)
+	$(NOECHO) echo "Prerequisities: $(PROJECT_PREREQUISITIES)"
+	$(NOECHO) echo "Libs: $(PROJECT_DEP_LIBS)"
+	$(NOECHO) echo "LD script $(PROJECT_LD_SCRIPT)"
 	$(NOECHO) echo "Linking the executable $(PROJECT_NAME).elf..."
 	$(NOECHO) -@mkdir $(PROJECT_BUILD_DIRECTORY) -p $(SUPPRESS_ERRORS)
 	$(NOECHO) cd $(PROJECT_BUILD_DIRECTORY) && \
@@ -133,20 +110,8 @@ rebuild: clean all
 #           Include dependencies targets                    #
 #############################################################
 
-ifdef PROJECT_KERNEL
-include $(PROJECT_DIRECTORY)/kernel/$(PROJECT_KERNEL)/$(PROJECT_KERNEL)_bld.mk
-endif
-
-ifdef PROJECT_APP
-include $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/$(PROJECT_APP)_bld.mk
-endif
-
-ifdef PROJECT_PLATFORM
-ifdef PROJECT_SUB_PLATFORM
-include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_bld.mk
-endif
-endif
-
-ifdef PROJECT_DRIVERS
-include $(PROJECT_DIRECTORY)/drivers/$(PROJECT_DRIVERS)/$(PROJECT_DRIVERS)_bld.mk
-endif
+include $(PROJECT_DIRECTORY)/$(PROJECT_APP_BLD)
+#include $(PROJECT_DIRECTORY)/$(PROJECT_ARCH_BLD)
+include $(PROJECT_DIRECTORY)/$(PROJECT_KERNEL_BLD)
+include $(PROJECT_DIRECTORY)/$(PROJECT_PLATFORM_BLD)
+include $(PROJECT_DIRECTORY)/$(PROJECT_DRIVERS_BLD)
