@@ -38,5 +38,5 @@ $(STM32L1xx_STD_PERIPH_BUILD_DIR)/$(STM32L1xx_STD_PERIPH_LIB_NAME):
 	          echo "Archiving the library $(STM32L1xx_STD_PERIPH_LIB_NAME) ..." && \
 	          $(AR) rcs -o $(STM32L1xx_STD_PERIPH_LIB_NAME) $(PROJECT_DRIVERS)_OBJ.o && \
 	          mkdir $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME) -p && \
-	          mv $(blinky_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
+	          mv $(STM32L1xx_STD_PERIPH_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 
