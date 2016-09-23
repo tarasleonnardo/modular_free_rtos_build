@@ -29,7 +29,8 @@ static void prvBTNTask( void *pvParameters );
 static void prvLEDTask( void *pvParameters );
 
 /*-----------------------------------------------------------*/
-int main( void )
+int __attribute__((visibility("default")))
+main( void )
 {
 	uint8_t arr = 1;
 	uint8_t arr1 = 0;

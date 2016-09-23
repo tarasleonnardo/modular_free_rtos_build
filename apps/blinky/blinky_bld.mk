@@ -8,6 +8,12 @@ include $(PROJECT_DIRECTORY)/arch/$(PROJECT_ARCH)/$(PROJECT_ARCH)_inc.mk
 include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_inc.mk
 
 ##########   Files and dirs              ############
+
+BLINKY_LOCAL_C_FLAGS := $(C_FLAGS)
+ifdef VIS_HIDDEN
+BLINKY_LOCAL_C_VIS_FLAG := -fvisibility=hidden
+endif
+
 BLINKY_BUILD_DIR := $(PROJECT_BUILD_DIRECTORY)/blinky
 
 BLINKY_LOCAL_INCLUDE_DIRS := $(blinky_INCLUDE_DIRS)
@@ -28,7 +34,7 @@ $(BLINKY_BUILD_DIR)/$(blinky_LIB_NAME):
 	$(NOECHO) -mkdir $(BLINKY_BUILD_DIR) -p
 	$(NOECHO) cd $(BLINKY_BUILD_DIR) && \
 	          echo "Compiling $(PROJECT_APP) files $(notdir $(BLINKY_LOCAL_SRC)) ..." && \
-	          $(CC) -c $(C_FLAGS) $(BLINKY_LOCAL_SRC) $(addprefix -I,$(BLINKY_LOCAL_INCLUDE_DIRS)) && \
+	          $(CC) -c $(BLINKY_LOCAL_C_FLAGS) $(BLINKY_LOCAL_C_VIS_FLAG) $(BLINKY_LOCAL_SRC) $(addprefix -I,$(BLINKY_LOCAL_INCLUDE_DIRS)) && \
 	          $(LD) -r -o $(PROJECT_APP)_OBJ.o $(BLINKY_LOCAL_OBJ) && \
 	          echo "Hiding private symbols $(PROJECT_APP)_OBJ.o..." && \
 	          $(OBJCOPY) --localize-hidden $(PROJECT_APP)_OBJ.o && \

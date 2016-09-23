@@ -31,12 +31,6 @@ OBJCOPY=$(TOOLCHAIN_PREF)objcopy
 
 C_FLAGS := -g -O0 -Wall -mthumb -mcpu=cortex-m3 -ffunction-sections -fdata-sections
 
-# Hide local symbols
-ifdef VIS_HIDDEN
-C_FLAGS += -fvisibility=hidden
-endif
-
-
 L_FLAGS:= --gc-sections,--print-memory-usage
 LD_LIB_PATH := /usr/arm-none-eabi/lib/thumb
 A_FLAGS:= -x assembler
@@ -52,9 +46,9 @@ NOECHO ?= @
 #                  Target dependencies                      # 
 #############################################################
 
-PROJECT_NAME := blinky
+PROJECT_NAME := led_switcher
 
-PROJECT_APP := blinky
+PROJECT_APP := led_switcher
 
 PROJECT_ARCH := ARM_CM3
 
@@ -64,7 +58,7 @@ PROJECT_PLATFORM := STM32L152
 
 PROJECT_SUB_PLATFORM := STM32L152
 
-#PROJECT_DRIVERS := STM32L1xx_STD_PERIPH
+PROJECT_DRIVERS := STM32L1xx_STD_PERIPH
 
 #############################################################
 
@@ -109,7 +103,7 @@ endif
 
 #############################################################
 
-PROJECT_DEP_LIBS := $($(PROJECT_APP)_LIB_NAME) $($(PROJECT_KERNEL)_LIB_NAME) $($(PROJECT_SUB_PLATFORM)_LIB_NAME)
+PROJECT_DEP_LIBS := $($(PROJECT_APP)_LIB_NAME) $($(PROJECT_KERNEL)_LIB_NAME) $($(PROJECT_SUB_PLATFORM)_LIB_NAME) $($(PROJECT_DRIVERS)_LIB_NAME)
 PROJECT_LD_SCRIPT := $(if PROJECT_SUB_PLATFORM,$(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$($(PROJECT_SUB_PLATFORM)_LD_SCRIPT))
 
 
