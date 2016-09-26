@@ -5,6 +5,8 @@
 ##########   Prerequisities                       ############
 
 include $(PROJECT_DIRECTORY)/arch/ARM_CM3/ARM_CM3_inc.mk
+include $(PROJECT_DIRECTORY)/platform/STM32L152/STM32L152/STM32L152_inc.mk
+include $(PROJECT_DIRECTORY)/drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph/STM32L1xx_Std_Periph_inc.mk
 
 ##########   Files and dirs              ############
 
@@ -17,6 +19,7 @@ STM32L152_BUILD_DIR := $(PROJECT_BUILD_DIRECTORY)/STM32L152
 
 STM32L152_LOCAL_INCLUDE_DIRS := $(STM32L152_INCLUDE_DIRS)
 STM32L152_LOCAL_INCLUDE_DIRS += $(ARM_CM3_INCLUDE_DIRS)
+STM32L152_LOCAL_INCLUDE_DIRS += $(STM32L1xx_Std_Periph_INCLUDE_DIRS)
 
 STM32L152_HEADERS := $(wildcard $(PROJECT_DIRECTORY)/platform/STM32L152/STM32L152/inc/*.h)
 STM32L152_SRC := $(wildcard $(PROJECT_DIRECTORY)/platform/STM32L152/STM32L152/src/*.c)

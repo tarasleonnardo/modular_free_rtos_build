@@ -27,7 +27,7 @@ FreeRTOS_OBJ := $(FreeRTOS_SRC_C:.c=.o)
 FreeRTOS_BLD_DIR := $(PROJECT_BUILD_DIRECTORY)/FreeRTOS
 
 # The target to build kernel library
-FreeRTOS_bld.mk: $(PROJECT_LIB_DIR)/$(FreeRTOS_LIB_NAME)
+FreeRTOS_bld.mk: $(PROJECT_LIB_DIR)/$(FreeRTOS_LIB_NAME) $(FreeRTOS_SRC) $(FreeRTOS_HEADERS)
 	$(NOECHO) echo "Success!"
 
 
@@ -43,4 +43,4 @@ $(PROJECT_LIB_DIR)/$(FreeRTOS_LIB_NAME): $(FreeRTOS_SRC) $(FreeRTOS_HEADERS)
 	          echo "Archiving the library $(FreeRTOS_LIB_NAME) ..." && \
 	          $(AR) rcs -o $(FreeRTOS_LIB_NAME) FreeRTOS_OBJ.o && \
 	          mkdir $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME) -p && \
-	          mv $(FreeRTOS_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
+	          mv $(FreeRTOS_LIB_NAME) $(PROJECT_LIB_DIR)

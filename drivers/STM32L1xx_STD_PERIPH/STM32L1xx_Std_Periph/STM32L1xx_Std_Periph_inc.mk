@@ -7,3 +7,4 @@ STM32L1xx_Std_Periph_INCLUDE_DIRS := $(PROJECT_DIRECTORY)/drivers/STM32L1xx_STD_
 
 STM32L1xx_Std_Periph_LIB_NAME := stm32f1xx_std_periph.a
 
+PROJECT_DEP_LIBS += $(STM32L1xx_Std_Periph_LIB_NAME)

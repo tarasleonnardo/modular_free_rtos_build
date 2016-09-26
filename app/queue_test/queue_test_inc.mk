@@ -3,8 +3,8 @@
 ##############################################################
 
 ##########   FreeRTOS files and dirs              ############
-blinky_INCLUDE_DIRS := $(PROJECT_DIRECTORY)/app/$(BLINKY_LOCAL_APP_NAME)
+queue_test_INCLUDE_DIRS := $(PROJECT_DIRECTORY)/app/$(QUEUE_TST_LOCAL_APP_NAME)
 
-blinky_LIB_NAME := blinky.a
+queue_test_LIB_NAME := q_test.a
 
-PROJECT_DEP_LIBS += $(blinky_LIB_NAME)
+PROJECT_DEP_LIBS += $(queue_test_LIB_NAME)

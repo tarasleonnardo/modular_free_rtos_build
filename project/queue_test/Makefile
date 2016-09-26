@@ -30,7 +30,7 @@ OBJCOPY=$(TOOLCHAIN_PREF)objcopy
 
 C_FLAGS := -g -O0 -Wall -mthumb -mcpu=cortex-m3 -ffunction-sections -fdata-sections
 
-L_FLAGS:= --gc-sections#,--print-memory-usage
+L_FLAGS:= --gc-sections
 LD_LIB_PATH := /usr/arm-none-eabi/lib/thumb
 A_FLAGS:= -x assembler
 
@@ -39,7 +39,7 @@ A_FLAGS:= -x assembler
 #############################################################
 NOECHO ?= @
 
-PROJECT_NAME := led_switcher
+PROJECT_NAME := queue_test
 PROJECT_DIRECTORY := $(shell pwd)/../..
 PROJECT_LIB_DIR := $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 PROJECT_BUILD_DIRECTORY := $(PROJECT_DIRECTORY)/build/$(PROJECT_NAME)
@@ -52,14 +52,14 @@ PROJECT_LD_SCRIPT :=
 #                  Target dependencies                      #
 #############################################################
 
-PROJECT_APP_INC := app/led_switcher/led_switcher_inc.mk
+PROJECT_APP_INC := app/queue_test/queue_test_inc.mk
 PROJECT_ARCH_INC := arch/ARM_CM3/ARM_CM3_inc.mk
 PROJECT_KERNEL_INC := kernel/FreeRTOS/FreeRTOS_inc.mk
 PROJECT_DRIVERS_INC := drivers/STM32L1xx_STD_PERIPH/led_driver/led_driver_inc.mk
 PROJECT_PLATFORM_INC := platform/STM32L152/STM32L152/STM32L152_inc.mk
 PROJECT_STD_PERIPH_INC := drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph/STM32L1xx_Std_Periph_inc.mk
 
-PROJECT_APP_BLD := app/led_switcher/led_switcher_bld.mk
+PROJECT_APP_BLD := app/queue_test/queue_test_bld.mk
 PROJECT_ARCH_BLD := arch/ARM_CM3/ARM_CM3_bld.mk
 PROJECT_KERNEL_BLD := kernel/FreeRTOS/FreeRTOS_bld.mk
 PROJECT_PLATFORM_BLD := platform/STM32L152/STM32L152/STM32L152_bld.mk

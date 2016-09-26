@@ -3,9 +3,10 @@
 ##############################################################
 
 ##########   Prerequisities                       ############
-include $(PROJECT_DIRECTORY)/apps/blinky/blinky_inc.mk
-include $(PROJECT_DIRECTORY)/arch/$(PROJECT_ARCH)/$(PROJECT_ARCH)_inc.mk
-include $(PROJECT_DIRECTORY)/platform/$(PROJECT_PLATFORM)/$(PROJECT_SUB_PLATFORM)/$(PROJECT_SUB_PLATFORM)_inc.mk
+include $(PROJECT_DIRECTORY)/app/blinky/blinky_inc.mk
+include $(PROJECT_DIRECTORY)/arch/ARM_CM3/ARM_CM3_inc.mk
+include $(PROJECT_DIRECTORY)/platform/STM32L152/STM32L152/STM32L152_inc.mk
+include $(PROJECT_DIRECTORY)/kernel/FreeRTOS/FreeRTOS_inc.mk
 
 ##########   Files and dirs              ############
 
@@ -17,16 +18,16 @@ endif
 BLINKY_BUILD_DIR := $(PROJECT_BUILD_DIRECTORY)/blinky
 
 BLINKY_LOCAL_INCLUDE_DIRS := $(blinky_INCLUDE_DIRS)
-BLINKY_LOCAL_INCLUDE_DIRS += $(if PROJECT_KERNEL,$($(PROJECT_KERNEL)_INCLUDE_DIRS))
-BLINKY_LOCAL_INCLUDE_DIRS += $(if PROJECT_SUB_PLATFORM,$($(PROJECT_SUB_PLATFORM)_INCLUDE_DIRS))
-BLINKY_LOCAL_INCLUDE_DIRS += $(if PROJECT_ARCH,$($(PROJECT_ARCH)_INCLUDE_DIRS))
+BLINKY_LOCAL_INCLUDE_DIRS += $(ARM_CM3_INCLUDE_DIRS)
+BLINKY_LOCAL_INCLUDE_DIRS += $(STM32L152_INCLUDE_DIRS)
+BLINKY_LOCAL_INCLUDE_DIRS += $(FreeRTOS_INCLUDE_DIRS)
 
-BLINKY_HEADERS := $(wildcard $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/*.h)
-BLINKY_LOCAL_SRC := $(wildcard $(PROJECT_DIRECTORY)/apps/$(PROJECT_APP)/*.c)
+BLINKY_HEADERS := $(wildcard $(PROJECT_DIRECTORY)/app/blinky/*.h)
+BLINKY_LOCAL_SRC := $(wildcard $(PROJECT_DIRECTORY)/app/blinky/*.c)
 BLINKY_LOCAL_OBJ := $(notdir $(BLINKY_LOCAL_SRC:.c=.o))
 
 # The target to build application library
-application: $(BLINKY_BUILD_DIR)/$(blinky_LIB_NAME) $(BLINKY_LOCAL_SRC) $(BLINKY_HEADERS)
+blinky_bld.mk: $(BLINKY_BUILD_DIR)/$(blinky_LIB_NAME) $(BLINKY_LOCAL_SRC) $(BLINKY_HEADERS)
 	$(NOECHO) echo "Success!"
 
 $(BLINKY_BUILD_DIR)/$(blinky_LIB_NAME):
@@ -35,11 +36,11 @@ $(BLINKY_BUILD_DIR)/$(blinky_LIB_NAME):
 	$(NOECHO) cd $(BLINKY_BUILD_DIR) && \
 	          echo "Compiling $(PROJECT_APP) files $(notdir $(BLINKY_LOCAL_SRC)) ..." && \
 	          $(CC) -c $(BLINKY_LOCAL_C_FLAGS) $(BLINKY_LOCAL_C_VIS_FLAG) $(BLINKY_LOCAL_SRC) $(addprefix -I,$(BLINKY_LOCAL_INCLUDE_DIRS)) && \
-	          $(LD) -r -o $(PROJECT_APP)_OBJ.o $(BLINKY_LOCAL_OBJ) && \
-	          echo "Hiding private symbols $(PROJECT_APP)_OBJ.o..." && \
-	          $(OBJCOPY) --localize-hidden $(PROJECT_APP)_OBJ.o && \
+	          $(LD) -r -o $(PROJECT_NAME)_OBJ.o $(BLINKY_LOCAL_OBJ) && \
+	          echo "Hiding private symbols $(PROJECT_NAME)_OBJ.o..." && \
+	          $(OBJCOPY) --localize-hidden $(PROJECT_NAME)_OBJ.o && \
 	          echo "Archiving the library $(blinky_LIB_NAME) ..." && \
-	          $(AR) rcs -o $(blinky_LIB_NAME) $(PROJECT_APP)_OBJ.o && \
+	          $(AR) rcs -o $(blinky_LIB_NAME) $(PROJECT_NAME)_OBJ.o && \
 	          mkdir $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME) -p && \
 	          mv $(blinky_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
 

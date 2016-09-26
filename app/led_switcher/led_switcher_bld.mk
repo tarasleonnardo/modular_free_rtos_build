@@ -21,6 +21,7 @@ LED_SWITCHER_BUILD_DIR := $(PROJECT_BUILD_DIRECTORY)/led_switcher
 LED_SWITCHER_LOCAL_INCLUDE_DIRS := $(LED_SWITCHER_INCLUDE_DIRS)
 LED_SWITCHER_LOCAL_INCLUDE_DIRS += $(FreeRTOS_INCLUDE_DIRS)
 LED_SWITCHER_LOCAL_INCLUDE_DIRS += $(STM32L1xx_STD_PERIPH_INCLUDE_DIRS)
+LED_SWITCHER_LOCAL_INCLUDE_DIRS += $(LED_DRIVER_INCLUDE_DIRS)
 
 LED_SWITCHER_HEADERS := $(wildcard $(PROJECT_DIRECTORY)/app/led_switcher/*.h)
 LED_SWITCHER_LOCAL_SRC := $(wildcard $(PROJECT_DIRECTORY)/app/led_switcher/*.c)
@@ -30,7 +31,7 @@ LED_SWITCHER_LOCAL_OBJ := $(notdir $(LED_SWITCHER_LOCAL_SRC:.c=.o))
 led_switcher_bld.mk: $(PROJECT_LIB_DIR)/$(led_switcher_LIB_NAME) $(LED_SWITCHER_LOCAL_SRC) $(LED_SWITCHER_HEADERS)
 	$(NOECHO) echo "Success!"
 
-$(PROJECT_LIB_DIR)/$(led_switcher_LIB_NAME):
+$(PROJECT_LIB_DIR)/$(led_switcher_LIB_NAME): $(LED_SWITCHER_LOCAL_SRC) $(LED_SWITCHER_HEADERS)
 	$(NOECHO) echo "Building application $(led_switcher_LIB_NAME) ..."
 	$(NOECHO) -mkdir $(LED_SWITCHER_BUILD_DIR) -p
 	$(NOECHO) cd $(LED_SWITCHER_BUILD_DIR) && \
@@ -42,5 +43,5 @@ $(PROJECT_LIB_DIR)/$(led_switcher_LIB_NAME):
 	          echo "Archiving the library $(led_switcher_LIB_NAME) ..." && \
 	          $(AR) rcs -o $(led_switcher_LIB_NAME) $(PROJECT_APP)_OBJ.o && \
 	          mkdir $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME) -p && \
-	          mv $(led_switcher_LIB_NAME) $(PROJECT_DIRECTORY)/lib/$(PROJECT_NAME)
+	          mv $(led_switcher_LIB_NAME) $(PROJECT_LIB_DIR)
 
