@@ -58,7 +58,6 @@
  extern "C" {
 #endif 
 
-#define USE_STD_PERIPHERAL
   
 /** @addtogroup Library_configuration_section
   * @{
@@ -98,7 +97,7 @@
    In this case, these drivers will not be included and the application code will 
    be based on direct access to peripherals registers 
    */
-   #define USE_STDPERIPH_DRIVER
+   /* #define USE_STDPERIPH_DRIVER */
 #endif
 
 /**
