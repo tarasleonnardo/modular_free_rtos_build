@@ -9,9 +9,11 @@ set(TOOLCHAIN_PREF arm-none-eabi-)
 CMAKE_FORCE_C_COMPILER  (${TOOLCHAIN_PREF}gcc GNU)
 CMAKE_FORCE_CXX_COMPILER(${TOOLCHAIN_PREF}g++ GNU)
 
-set(CMAKE_C_FLAGS "-std=c99 -g -O0 -Wall -mthumb -mcpu=cortex-m3 -ffunction-sections -fdata-sections")
-set(CMAKE_C_LINK_FLAGS "-Wl,--print-memory-usage,--gc-sections,-nostdlib -T ${LINKER_SCRIPT}")
+set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=cortex-m3 -mthumb -ffunction-sections -fdata-sections")
+set(CMAKE_C_LINK_FLAGS_GLOBAL "-Wl,--print-memory-usage,--gc-sections, -T ${LINKER_SCRIPT}")
 
+set(CMAKE_C_LINK_FLAGS ${CMAKE_LINK_FLAGS_GLOBAL})
+set(CMAKE_C_FLAGS ${CMAKE_C_LINK_FLAGS_GLOBAL})
 
 # Project settings
 set(PRJ_NAME blinky_prj)
@@ -37,7 +39,12 @@ set(MODULES
    )
 
 # Add the blank executable
-add_executable(${APP_NAME} blank.c)
+add_executable(${APP_NAME}.elf blank.c)
+
+message("************** Start ${APP_NAME}.elf")
 
 # Add the dependencies
-ADD_TARGET_DEPS_MACRO(${APP_NAME} ${MODULES})
+ADD_TARGET_DEPS_MACRO(${APP_NAME}.elf ${MODULES})
+
+message("************** The end ${APP_NAME}.elf")
+

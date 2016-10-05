@@ -1,27 +1,38 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-set(CURRENT_MODULE_NAME kernel_FreeRTOS)
 set(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+
+set(CURRENT_MODULE_NAME kernel_FreeRTOS)
+set(CURRENT_MODULE_COMPILE_FLAGS )
 
 # Dependencies of the module
 set(CURRENT_MODULE_DEPENDENCIES )
 
 set(CURRENT_MODULE_INC
-    ${CURRENT_DIR}/
+    ${CURRENT_DIR}
     ${CURRENT_DIR}/Source/include
     ${CURRENT_DIR}/Source/portable/GCC/ARM_CM3
    )
 
 set(CURRENT_MODULE_SRC
+    ${CURRENT_DIR}/Source/queue.c
+    ${CURRENT_DIR}/Source/tasks.c
+    ${CURRENT_DIR}/Source/timers.c
     ${CURRENT_DIR}/Source/portable/MemMang/heap_2.c
+    ${CURRENT_DIR}/Source/portable/GCC/ARM_CM3
    )
 
 ####################################################################################
 # Create library
 CREATE_MODULE_LIB_MACRO(${CURRENT_MODULE_NAME} ${CURRENT_MODULE_SRC})
 
-message("Freertos include directory: ${CURRENT_MODULE_INC}")
+# Set include directories for the target
 target_include_directories(${CURRENT_MODULE_NAME} PUBLIC ${CURRENT_MODULE_INC})
+
+# Set compile flags for the target
+set_target_properties( ${CURRENT_MODULE_NAME} PROPERTIES COMPILE_FLAGS
+                      "${CMAKE_C_FLAGS_GLOBAL} ${CURRENT_MODULE_COMPILE_FLAGS}")
 
 # Add dependencies if exist
 if(CURRENT_MODULE_DEPENDENCIES)

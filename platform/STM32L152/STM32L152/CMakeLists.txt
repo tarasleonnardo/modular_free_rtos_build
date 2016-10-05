@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-
-GET_BIN_DIR_PATH(app/blinky BIN_DIR)
-add_subdirectory(${BASE_DIR}/app/blinky ${BIN_DIR})
-
+add_library(platform_STM32L152_STM32L152 ${CMAKE_CURRENT_SOURCE_DIR}/src/system_stm32l1xx.c)
+message("Hello from the platform CMakeLists.txt")
