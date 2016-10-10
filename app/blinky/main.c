@@ -39,7 +39,7 @@ main( void )
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN_Msk;
 	GPIOA->MODER |= 1 << 10;
-    GPIOA->ODR |= 1 << 5;
+        GPIOA->ODR |= 1 << 5;
 
     if(0 == (queue = xQueueCreate(40, sizeof(uint32_t))))
     {
@@ -63,11 +63,13 @@ static void prvBTNTask( void *pvParameters )
 
 	RCC->AHBENR |= RCC_AHBENR_GPIOCEN_Msk;
 
+        GPIOA->ODR |= 1 << 5;
+
 	  for(;;)
 	  {
 		if((GPIOC->IDR & (1 << 13)) == 0)
 		{
-			GPIOA->ODR &= ~(1 << 5);
+			GPIOA->ODR |= (1 << 5);
 			xQueueSend(queue, (void *)&item, 0);
 			if(++item > 5)
 			{
@@ -85,9 +87,14 @@ static void prvLEDTask( void *pvParameters )
 {
 	uint32_t buf = 0;
 
+        GPIOA->ODR &= ~(1 << 5);
+
 	  /* Forever loop */
 	  for(;;)
 	  {
+
+                  GPIOA->ODR ^= 1 << 5;
+
 		  if(pdTRUE == xQueueReceive(queue, &buf, 0))
 		  {
 			  vTaskDelay(300);
@@ -103,4 +110,9 @@ static void prvLEDTask( void *pvParameters )
 			  vTaskDelay(50);
 		  }
 	  }
+}
+
+void _exit(int status)
+{
+    while(1);
 }

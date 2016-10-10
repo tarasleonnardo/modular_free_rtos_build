@@ -10,11 +10,14 @@ set(TOOLCHAIN_PREF arm-none-eabi-)
 
 CMAKE_FORCE_C_COMPILER  (${TOOLCHAIN_PREF}gcc GNU)
 CMAKE_FORCE_CXX_COMPILER(${TOOLCHAIN_PREF}g++ GNU)
-set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREF}as)
 
-set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=cortex-m3 -mthumb -ffunction-sections -fdata-sections")
+set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREF}gcc)
+
+enable_language(ASM)
+
+set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=cortex-m3 -mthumb -ffunction-sections -fdata-sections -nostdlib")
 set(CMAKE_C_LINK_FLAGS_GLOBAL "-Wl,--print-memory-usage,--gc-sections")
-set(CMAKE_LINK_LIBRARIES_GLOBAL "-lc")
+set(CMAKE_LINK_LIBRARIES_GLOBAL "")
 
 set(CMAKE_C_LINK_FLAGS ${CMAKE_LINK_FLAGS_GLOBAL})
 set(CMAKE_C_FLAGS ${CMAKE_C_LINK_FLAGS_GLOBAL})
@@ -22,7 +25,7 @@ set(CMAKE_C_FLAGS ${CMAKE_C_LINK_FLAGS_GLOBAL})
 # Project settings
 set(PRJ_NAME blinky_prj)
 
-project(PRJ_NAME)
+project(PRJ_NAME )
 
 # Check application name
 if(NOT DEFINED APP_NAME)
