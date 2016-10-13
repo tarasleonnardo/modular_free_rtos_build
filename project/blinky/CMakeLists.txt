@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5.1)
 ### Toolchain settings
 include (CMakeForceCompiler)
 
-get_filename_component(BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE) 
+get_filename_component(BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
 
 set(TOOLCHAIN_DIR "usr/arm-none-eabi/bin")
 set(TOOLCHAIN_PREF arm-none-eabi-)
@@ -22,13 +22,6 @@ set(PRJ_NAME blinky_prj)
 
 ### Application name
 set(APP_NAME blinky_app)
-
-### The name of the file to write the libraries list
-set(LINK_LIBRARIES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/libs_list.txt)
-file(REMOVE ${LINK_LIBRARIES_LIST_FILE})
-### The name of the file to write the modules names
-set(LINK_MODULES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/modules_list.txt)
-file(REMOVE ${LINK_MODULES_LIST_FILE})
 
 ### Preprocessor definitions
 add_definitions(-DUSE_STDPERIPH_DRIVER)
@@ -51,6 +44,13 @@ set(MODULES
     platform/stm32/STM32L1xx/STM32L152
     drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph
    )
+
+### The name of the file to write the libraries list
+set(LINK_LIBRARIES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/libs_list.txt)
+file(REMOVE ${LINK_LIBRARIES_LIST_FILE})
+### The name of the file to write the modules names
+set(LINK_MODULES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/modules_list.txt)
+file(REMOVE ${LINK_MODULES_LIST_FILE})
 
 ################################################################################################
 ### Include macros definitions
@@ -109,7 +109,7 @@ foreach(module ${TMP_VAR})
     set(LIBS_LIST " ${LIBS_LIST} ${module}")
     get_filename_component(TMP_FILENAME ${module} NAME)
     message("* ${TMP_FILENAME}")
-	    
+
 endforeach(module ${MODULES})
 
 set(LIBS_LIST " ${LIBS_LIST} -Wl,--end-group")
