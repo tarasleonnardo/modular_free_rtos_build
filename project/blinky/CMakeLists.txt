@@ -74,8 +74,6 @@ add_executable(${APP_NAME}.elf ${GLOBAL_BLANK_C})
 ADD_TARGET_DEPS_MACRO(${APP_NAME}.elf ${MODULES})
 
 ### Add linker script to the linker flags
-#get_directory_property(LINKER_SCRIPT DIRECTORY ${BASE_DIR}/platform/stm32/STM32L1xx/STM32L152 DEFINITION LINKER_SCRIPT)
-
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} ${CMAKE_LINK_LIBRARIES_GLOBAL} -T${LINKER_SCRIPT}")
 message("--- Linker script: ${LINKER_SCRIPT}")
 
