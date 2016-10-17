@@ -35,6 +35,8 @@ macro(ADD_TARGET_DEPS_MACRO )
             GET_BIN_DIR_PATH_MACRO(${module} BIN_DIR)
             ### Add target to build the library
             add_subdirectory(${BASE_DIR}/${module} ${BIN_DIR})
+            
+#            message("Binary directory of ${module} is ${BIN_DIR}")
          
             ### Add every dependency to the list of libraries for the linker
             message("Writing to file ${LINK_MODULES_LIST_FILE}")

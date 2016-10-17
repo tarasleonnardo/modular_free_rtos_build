@@ -144,5 +144,4 @@ endif(USE_STD_PERIPH_WWDG)
 
 ####################################################################################
 # Create the target for the current module and add all of its dependencies
-
 CREATE_FULL_MODULE()
