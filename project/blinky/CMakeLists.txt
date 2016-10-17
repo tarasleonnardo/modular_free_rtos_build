@@ -34,6 +34,7 @@ set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=${TARGET_ARCH} -mthumb -ffunction-s
 ### Linker options
 set(CMAKE_C_LINK_FLAGS_GLOBAL "-Wl,--print-memory-usage,--gc-sections")
 
+set(LINKER_SCRIPT "${BASE_DIR}/platform/stm32/common/STM32L152XE_FLASH.ld")
 ### Libraries to link. Besides the libraries of the modules. e.g. -lgcc
 set(CMAKE_LINK_LIBRARIES_GLOBAL "")
 
@@ -73,7 +74,7 @@ add_executable(${APP_NAME}.elf ${GLOBAL_BLANK_C})
 ADD_TARGET_DEPS_MACRO(${APP_NAME}.elf ${MODULES})
 
 ### Add linker script to the linker flags
-get_directory_property(LINKER_SCRIPT DIRECTORY ${BASE_DIR}/platform/stm32/STM32L1xx/STM32L152 DEFINITION LINKER_SCRIPT)
+#get_directory_property(LINKER_SCRIPT DIRECTORY ${BASE_DIR}/platform/stm32/STM32L1xx/STM32L152 DEFINITION LINKER_SCRIPT)
 
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} ${CMAKE_LINK_LIBRARIES_GLOBAL} -T${LINKER_SCRIPT}")
 message("--- Linker script: ${LINKER_SCRIPT}")

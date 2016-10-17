@@ -10,4 +10,5 @@ rm -r $CMAKE_LISTS_BLD_DIR/*
 mkdir $CMAKE_LISTS_BLD_DIR/cmakelists -p
 
 cd $CMAKE_LISTS_BLD_DIR/cmakelists && 
-cmake $CMAKE_LISTS_DIR
+cmake $CMAKE_LISTS_DIR &&
+make VERBOSE=1
