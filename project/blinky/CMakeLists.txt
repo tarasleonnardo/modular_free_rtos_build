@@ -27,6 +27,19 @@ set(APP_NAME blinky_app)
 add_definitions(-DUSE_STDPERIPH_DRIVER)
 set(TARGET_ARCH cortex-m3)
 
+### Memory layout
+set(FLASH_ORIGIN "0x08000000")
+set(FLASH_LENGTH "512K")
+
+set(RAM_ORIGIN "0x20000000")
+set(RAM_LENGTH "80K")
+
+set(CCM_ORIGIN "0x00000000")
+set(CCM_LENGTH "0")
+
+set(EEPROM_ORIGIN "0x00000000")
+set(EEPROM_LENGTH "0")
+
 
 ### Compiler options
 set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=${TARGET_ARCH} -mthumb -ffunction-sections -fdata-sections -nostdlib")
@@ -34,7 +47,6 @@ set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=${TARGET_ARCH} -mthumb -ffunction-s
 ### Linker options
 set(CMAKE_C_LINK_FLAGS_GLOBAL "-Wl,--print-memory-usage,--gc-sections")
 
-set(LINKER_SCRIPT "${BASE_DIR}/platform/stm32/common/STM32L152XE_FLASH.ld")
 ### Libraries to link. Besides the libraries of the modules. e.g. -lgcc
 set(CMAKE_LINK_LIBRARIES_GLOBAL "")
 
@@ -45,6 +57,9 @@ set(MODULES
     platform/stm32/STM32L1xx/STM32L152
     drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph
    )
+
+set(LINKER_SCRIPT_TEMPLATE "${BASE_DIR}/platform/stm32/common/link_template.ld")
+set(LINKER_SCRIPT "${BASE_DIR}/platform/stm32/common/link.ld")
 
 ### The name of the file to write the libraries list
 set(LINK_LIBRARIES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/libs_list.txt)
@@ -61,6 +76,8 @@ include("${BASE_DIR}/cmake/macro.cmake")
 ################################################################################################
 ### All the work is done below
 
+### Configure the linker script
+configure_file(${LINKER_SCRIPT_TEMPLATE} ${LINKER_SCRIPT})
 ### Create project
 project(PRJ_NAME )
 

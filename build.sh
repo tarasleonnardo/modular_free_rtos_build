@@ -11,4 +11,4 @@ mkdir $CMAKE_LISTS_BLD_DIR/cmakelists -p
 
 cd $CMAKE_LISTS_BLD_DIR/cmakelists && 
 cmake $CMAKE_LISTS_DIR &&
-make VERBOSE=1
+make VERBOSE=
