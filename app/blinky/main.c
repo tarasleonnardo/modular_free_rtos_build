@@ -93,7 +93,6 @@ static void prvLEDTask( void *pvParameters )
 	  for(;;)
 	  {
 
-                  GPIOA->ODR ^= 1 << 5;
 
 		  if(pdTRUE == xQueueReceive(queue, &buf, 0))
 		  {
@@ -107,6 +106,7 @@ static void prvLEDTask( void *pvParameters )
 			  }
 		  }else
 		  {
+			  GPIOA->ODR ^= 1 << 5;
 			  vTaskDelay(50);
 		  }
 	  }
