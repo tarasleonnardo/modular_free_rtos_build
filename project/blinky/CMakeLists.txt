@@ -1,55 +1,60 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-### Toolchain settings
-include (CMakeForceCompiler)
-
-get_filename_component(BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
-
-set(TOOLCHAIN_DIR "usr/arm-none-eabi/bin")
-set(TOOLCHAIN_PREF arm-none-eabi-)
-
-CMAKE_FORCE_C_COMPILER  (${TOOLCHAIN_PREF}gcc GNU)
-CMAKE_FORCE_CXX_COMPILER(${TOOLCHAIN_PREF}g++ GNU)
-
-set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREF}gcc)
-
-set(GLOBAL_BLANK_C ${CMAKE_CURRENT_SOURCE_DIR}/blank.c)
-
-enable_language(ASM)
-
 ### The name of the project
 set(PRJ_NAME blinky_prj)
 
 ### Application name
 set(APP_NAME blinky_app)
 
+### Create project
+project(PRJ_NAME )
+
+################################################################################################
+### Project paths
+### Root directory of the project
+get_filename_component(BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.." ABSOLUTE)
+### Dirirecotry for building the projects.
+### The project subdirectory will be created in this dir
+set(BUILD_DIR ${BASE_DIR}/build)
+
+### The directory for executable
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIR}/${PRJ_NAME}/exe)
+
+### The liker script will be generated here and used to link the executable
+set(LINKER_SCRIPT ${BUILD_DIR}/ld/link.ld)
+
+### Source files for the targets which do not have source.
+set(GLOBAL_BLANK_C ${CMAKE_CURRENT_SOURCE_DIR}/blank.c)
+
+### The name of the file to write the libraries list
+set(LINK_LIBRARIES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/libs_list.txt)
+
+### The name of the file to write the modules names
+set(LINK_MODULES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/modules_list.txt)
+################################################################################################
+### Toolchain settings
+set(TOOLCHAIN_DIR "usr/arm-none-eabi/bin")
+set(TOOLCHAIN_PREF arm-none-eabi-)
+
+include (CMakeForceCompiler)
+CMAKE_FORCE_C_COMPILER  (${TOOLCHAIN_PREF}gcc GNU)
+CMAKE_FORCE_CXX_COMPILER(${TOOLCHAIN_PREF}g++ GNU)
+set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREF}gcc)
+enable_language(ASM)
+
 ### Preprocessor definitions
 add_definitions(-DUSE_STDPERIPH_DRIVER)
+
 set(TARGET_ARCH cortex-m3)
-
-### Memory layout
-set(FLASH_ORIGIN "0x08000000")
-set(FLASH_LENGTH "512K")
-
-set(RAM_ORIGIN "0x20000000")
-set(RAM_LENGTH "80K")
-
-set(CCM_ORIGIN "0x00000000")
-set(CCM_LENGTH "0")
-
-set(EEPROM_ORIGIN "0x00000000")
-set(EEPROM_LENGTH "0")
-
 
 ### Compiler options
 set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=${TARGET_ARCH} -mthumb -ffunction-sections -fdata-sections -nostdlib")
-
 ### Linker options
 set(CMAKE_C_LINK_FLAGS_GLOBAL "-Wl,--print-memory-usage,--gc-sections")
-
 ### Libraries to link. Besides the libraries of the modules. e.g. -lgcc
 set(CMAKE_LINK_LIBRARIES_GLOBAL "")
 
+################################################################################################
 ### The list of the application dependencies
 set(MODULES
     app/blinky
@@ -57,16 +62,6 @@ set(MODULES
     platform/stm32/STM32L1xx/STM32L152
     drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph
    )
-
-set(LINKER_SCRIPT_TEMPLATE "${BASE_DIR}/platform/stm32/common/link_template.ld")
-set(LINKER_SCRIPT "${BASE_DIR}/platform/stm32/common/link.ld")
-
-### The name of the file to write the libraries list
-set(LINK_LIBRARIES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/libs_list.txt)
-file(REMOVE ${LINK_LIBRARIES_LIST_FILE})
-### The name of the file to write the modules names
-set(LINK_MODULES_LIST_FILE ${BASE_DIR}/build/${PRJ_NAME}/modules_list.txt)
-file(REMOVE ${LINK_MODULES_LIST_FILE})
 
 ################################################################################################
 ### Include macros definitions
@@ -76,10 +71,13 @@ include("${BASE_DIR}/cmake/macro.cmake")
 ################################################################################################
 ### All the work is done below
 
+### Remove the files containing modules and deps lists
+file(REMOVE ${LINK_LIBRARIES_LIST_FILE})
+file(REMOVE ${LINK_MODULES_LIST_FILE})
+
 ### Configure the linker script
-configure_file(${LINKER_SCRIPT_TEMPLATE} ${LINKER_SCRIPT})
-### Create project
-project(PRJ_NAME )
+#configure_file(${LINKER_SCRIPT_TEMPLATE} ${LINKER_SCRIPT})
+#include(${BASE_DIR}/platform/stm32/common/ldconf.cmake)
 
 set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_GLOBAL})
 set(CMAKE_C_LINK_FLAGS ${CMAKE_LINK_FLAGS_GLOBAL})
