@@ -35,7 +35,7 @@ if( NOT EEPROM_LENGTH )
 endif( NOT EEPROM_LENGTH )
 
 ### Template linker srcipt file
-set(LINKER_SCRIPT_TEMPLATE "${BASE_DIR}/platform/stm32/common/link_template.ld")
+set(LINKER_SCRIPT_TEMPLATE "${BASE_DIR}/platform/stm32/common/ld_template/link_template.ld")
 
 message(***************************************)
 message(Memory layout)

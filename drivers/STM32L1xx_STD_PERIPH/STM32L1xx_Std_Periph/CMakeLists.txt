@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.5.1)
 
 set(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-GET_MODULE_NAME_MACRO(CURRENT_MODULE_NAME)
-
-set(CURRENT_MODULE_COMPILE_FLAGS ${CMAKE_C_FLAGS_GLOBAL})
-
 ####################################################################################
 # The dependencies of the current module
 

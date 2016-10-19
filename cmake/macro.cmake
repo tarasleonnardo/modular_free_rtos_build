@@ -114,6 +114,14 @@ endmacro(GET_MODULE_NAME_MACRO)
 ### Create the libraru for current module and add all the dependencies
 macro(CREATE_FULL_MODULE)
 
+    ### Generate module name and dir
+    GET_MODULE_NAME_MACRO(CURRENT_MODULE_NAME)
+
+    set(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+    message(******************************************************************************)
+    message("Current module name: ${CURRENT_MODULE_NAME}, current dir: ${CURRENT_DIR}")
+
     ### Create library
     CREATE_MODULE_LIB_MACRO(${CURRENT_MODULE_NAME} ${CURRENT_MODULE_SRC})
 
@@ -123,7 +131,9 @@ macro(CREATE_FULL_MODULE)
         ADD_TARGET_DEPS_MACRO(${CURRENT_MODULE_NAME} ${CURRENT_MODULE_DEPENDENCIES})
     
     endif(CURRENT_MODULE_DEPENDENCIES)
-    
+   
+    unset(CURRENT_MODULE_NAME)
+    unset(CURRENT_DIR) 
 endmacro(CREATE_FULL_MODULE)
 
 ######################################################################################

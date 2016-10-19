@@ -92,7 +92,7 @@ ADD_TARGET_DEPS_MACRO(${APP_NAME}.elf ${MODULES})
 set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} ${CMAKE_LINK_LIBRARIES_GLOBAL} -T${LINKER_SCRIPT}")
 message("--- Linker script: ${LINKER_SCRIPT}")
 
-set_target_properties( ${CURRENT_MODULE_NAME} PROPERTIES
+set_target_properties( ${APP_NAME}.elf PROPERTIES
                        COMPILE_FLAGS ${CMAKE_C_FLAGS_GLOBAL})
 
 
