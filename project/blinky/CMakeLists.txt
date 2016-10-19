@@ -69,63 +69,6 @@ set(MODULES
 include("${BASE_DIR}/cmake/macro.cmake")
 
 ################################################################################################
-### All the work is done below
+### All the work is done in cmake/macro.cmake file
 
-### Remove the files containing modules and deps lists
-file(REMOVE ${LINK_LIBRARIES_LIST_FILE})
-file(REMOVE ${LINK_MODULES_LIST_FILE})
-
-### Configure the linker script
-#configure_file(${LINKER_SCRIPT_TEMPLATE} ${LINKER_SCRIPT})
-#include(${BASE_DIR}/platform/stm32/common/ldconf.cmake)
-
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS_GLOBAL})
-set(CMAKE_C_LINK_FLAGS ${CMAKE_LINK_FLAGS_GLOBAL})
-
-### Add the blank executable
-add_executable(${APP_NAME}.elf ${GLOBAL_BLANK_C})
-
-### Add the dependencies
-ADD_TARGET_DEPS_MACRO(${APP_NAME}.elf ${MODULES})
-
-### Add linker script to the linker flags
-set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} ${CMAKE_LINK_LIBRARIES_GLOBAL} -T${LINKER_SCRIPT}")
-message("--- Linker script: ${LINKER_SCRIPT}")
-
-set_target_properties( ${APP_NAME}.elf PROPERTIES
-                       COMPILE_FLAGS ${CMAKE_C_FLAGS_GLOBAL})
-
-
-################################################################################################
-### Make the project dependent on the modules
-file(READ ${LINK_MODULES_LIST_FILE} TMP_VAR)
-
-list(REMOVE_DUPLICATES TMP_VAR)
-message("*** Modules:")
-
-foreach(module ${TMP_VAR})
-
-    add_dependencies(${APP_NAME}.elf ${module})
-    message("* ${module}")
-
-endforeach(module ${MODULES})
-
-################################################################################################
-### Create the list of the modules libraries
-file(READ ${LINK_LIBRARIES_LIST_FILE} TMP_VAR)
-
-list(REMOVE_DUPLICATES TMP_VAR)
-set(LIBS_LIST "-Wl,--start-group")
-
-message("*** Link libraries:")
-foreach(module ${TMP_VAR})
-
-    set(LIBS_LIST " ${LIBS_LIST} ${module}")
-    get_filename_component(TMP_FILENAME ${module} NAME)
-    message("* ${TMP_FILENAME}")
-
-endforeach(module ${MODULES})
-
-set(LIBS_LIST " ${LIBS_LIST} -Wl,--end-group")
-
-set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} ${LIBS_LIST}")
+MAKE_PROJECT()
