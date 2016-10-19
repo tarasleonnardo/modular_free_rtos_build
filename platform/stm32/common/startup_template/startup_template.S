@@ -2,7 +2,7 @@
 #define FUNCTION(x) .global x; .type x,%function; .thumb_func; x:
 
 .syntax unified
-.cpu @TARGET_CPU@
+.cpu @TARGET_ARCH@
 .fpu @TARGET_FPU@
 .thumb
 

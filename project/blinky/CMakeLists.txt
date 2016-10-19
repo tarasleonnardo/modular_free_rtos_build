@@ -21,7 +21,7 @@ set(BUILD_DIR ${BASE_DIR}/build)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BUILD_DIR}/${PRJ_NAME}/exe)
 
 ### The liker script will be generated here and used to link the executable
-set(LINKER_SCRIPT ${BUILD_DIR}/ld/link.ld)
+set(LINKER_SCRIPT ${BUILD_DIR}/${PRJ_NAME}/ld/link.ld)
 
 ### Source files for the targets which do not have source.
 set(GLOBAL_BLANK_C ${CMAKE_CURRENT_SOURCE_DIR}/blank.c)
@@ -46,6 +46,7 @@ enable_language(ASM)
 add_definitions(-DUSE_STDPERIPH_DRIVER)
 
 set(TARGET_ARCH cortex-m3)
+set(TARGET_FPU softvfp)
 
 ### Compiler options
 set(CMAKE_C_FLAGS_GLOBAL "-g -O0 -Wall -mcpu=${TARGET_ARCH} -mthumb -ffunction-sections -fdata-sections -nostdlib")
