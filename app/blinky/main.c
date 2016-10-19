@@ -17,7 +17,7 @@
 tasks. */
 #define mainLED_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE )
 
-volatile int32_t tmp_cnt = 0;
+volatile int32_t tmp_cnt = 1;
 QueueHandle_t queue = 0;
 
 /*

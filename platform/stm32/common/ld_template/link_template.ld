@@ -1,9 +1,5 @@
 ENTRY(Reset_Handler)
 
-/* The top of the stack */
-_estack = 0x20007FFF;
-
-
 /* Memory areas */
 MEMORY
 {
@@ -13,10 +9,12 @@ MEMORY
     EEPROM(rw) : ORIGIN = @EEPROM_ORIGIN@, LENGTH = @EEPROM_LENGTH@
 }
 
+/* The top of the stack */
+_estack = 0x20007FFF; /* ORIGIN(RAM) + LENGTH(RAM); */
 
 SECTIONS
 {
-    /* Interrupt vectors -> beginning of the flash */
+    /* Interrupt vectors -> Flash */
     .isr_vector :
     {
         . = ALIGN(4);
@@ -51,8 +49,10 @@ SECTIONS
         . = ALIGN(4);
     } > FLASH
 
+    . = ALIGN(4);
     /* Start of data to initialize at startup */
     _sidata = LOADADDR(.data);
+
     /* Initialized data */
     .data :
     {
