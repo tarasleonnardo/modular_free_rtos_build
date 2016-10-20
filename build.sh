@@ -10,5 +10,5 @@ rm -r $CMAKE_LISTS_BLD_DIR/*
 mkdir $CMAKE_LISTS_BLD_DIR/cmakelists -p
 
 cd $CMAKE_LISTS_BLD_DIR/cmakelists && 
-cmake $CMAKE_LISTS_DIR &&
+cmake $CMAKE_LISTS_DIR -DUSE_STD_PERIPH_GPIO=1 -DUSE_STD_PERIPH_RCC=1 &&
 make VERBOSE=

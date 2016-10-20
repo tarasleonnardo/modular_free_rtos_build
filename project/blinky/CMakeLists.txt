@@ -43,7 +43,14 @@ set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PREF}gcc)
 enable_language(ASM)
 
 ### Preprocessor definitions
-add_definitions(-DUSE_STDPERIPH_DRIVER)
+#set(USE_STD_PERIPH_GPIO YES)
+#set(USE_STD_PERIPH_RCC YES)
+
+### Preprocessor definitions
+add_definitions( -DUSE_STDPERIPH_DRIVER 
+                 -DUSE_STD_PERIPH_GPIO
+                 -DUSE_STD_PERIPH_RCC
+               )
 
 set(TARGET_ARCH cortex-m3)
 set(TARGET_FPU softvfp)

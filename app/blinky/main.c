@@ -6,42 +6,40 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-/* MCU includes */
-#include "stm32l152xe.h"
+
+#include "stm32l1xx.h"
 #include "string.h"
 
-/* The priorities assigned to the tasks. */
+/* Taske priorities */
 #define mainLED_TASK_PRIORITY			( tskIDLE_PRIORITY + 1)
-
-/* The LCD task uses printf() so requires more stack than most of the other
-tasks. */
 #define mainLED_TASK_STACK_SIZE			( configMINIMAL_STACK_SIZE )
 
-volatile int32_t tmp_cnt = 0;
-QueueHandle_t queue = 0;
+/* Control definitions */
+#define GET_BTN_STATE() GPIO_ReadInputDataBit(btn_port, btn_pin)
+#define SET_LED_STATE(state) GPIO_WriteBit(led_port, led_pin, state)
+#define TOGGLE_LED_STATE() GPIO_ToggleBits(led_port, led_pin)
+#define LED_ON    1
+#define LED_OFF   0
 
-/*
- * The task that handles the uIP stack.  All TCP/IP processing is performed in
- * this task.
- */
+/* Static data */
+static volatile int32_t tmp_cnt = 0;
+static QueueHandle_t queue = 0;
 
+static GPIO_TypeDef* led_port = GPIOA;
+static const uint16_t led_pin = GPIO_Pin_5;
+static GPIO_TypeDef* btn_port = GPIOC;
+static const uint16_t btn_pin = GPIO_Pin_13;
+
+/* Functions prototypes */
 static void prvBTNTask( void *pvParameters );
 static void prvLEDTask( void *pvParameters );
+static void hwInit(void);
 
-/*-----------------------------------------------------------*/
-int __attribute__((visibility("default")))
-main( void )
+int main( void )
 {
-	uint8_t arr = 1;
-	uint8_t arr1 = 0;
+	hwInit();
 
-	memcpy(&arr1, &arr, sizeof(arr1));
-
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN_Msk;
-	GPIOA->MODER |= 1 << 10;
-        GPIOA->ODR |= 1 << 5;
-
-    if(0 == (queue = xQueueCreate(40, sizeof(uint32_t))))
+	if(0 == (queue = xQueueCreate(40, sizeof(uint32_t))))
     {
     	for(;;);
     }
@@ -56,63 +54,80 @@ main( void )
 	return 0;
 }
 
-/*-----------------------------------------------------------*/
+/* Button polling task*/
 static void prvBTNTask( void *pvParameters )
 {
-	uint32_t item = 1;
+    uint32_t item = 5;
 
-	RCC->AHBENR |= RCC_AHBENR_GPIOCEN_Msk;
-
-        GPIOA->ODR |= 1 << 5;
-
-	  for(;;)
-	  {
-		if((GPIOC->IDR & (1 << 13)) == 0)
-		{
-			GPIOA->ODR |= (1 << 5);
-			xQueueSend(queue, (void *)&item, 0);
-			if(++item > 5)
-			{
-				item = 1;
-			}
-
-			vTaskDelay(100);
-		}
-		vTaskDelay(50);
-	  }
+    for(;;)
+    {
+        if(0 == GET_BTN_STATE())
+        {
+            xQueueSend(queue, (void *)&item, 0);
+            if(++item > 10)
+            {
+                item = 5;
+            }
+            vTaskDelay(100);
+        }
+        vTaskDelay(50);
+    }
 }
 
-/*-----------------------------------------------------------*/
+/* Led control task */
 static void prvLEDTask( void *pvParameters )
 {
-	uint32_t buf = 0;
+    uint32_t buf = 0;
 
-        GPIOA->ODR &= ~(1 << 5);
+    SET_LED_STATE(LED_ON);
+    vTaskDelay(300);
+    SET_LED_STATE(LED_OFF);
+    /* Forever loop */
+    for(;;)
+    {
+        if(pdTRUE == xQueueReceive(queue, &buf, 0))
+        {
+            SET_LED_STATE(LED_OFF);
+            vTaskDelay(300);
 
-	  /* Forever loop */
-	  for(;;)
-	  {
-
-
-		  if(pdTRUE == xQueueReceive(queue, &buf, 0))
-		  {
-			  vTaskDelay(300);
-			  while(buf--)
-			  {
-				  GPIOA->ODR |= 1 << 5;
-				  vTaskDelay(50);
-				  GPIOA->ODR &= ~(1 << 5);
-				  vTaskDelay(300);
-			  }
-		  }else
-		  {
-			  GPIOA->ODR ^= 1 << 5;
-			  vTaskDelay(50);
-		  }
-	  }
+            while(buf--)
+            {
+                SET_LED_STATE(LED_ON);
+                vTaskDelay(50);
+                SET_LED_STATE(LED_OFF);
+                vTaskDelay(300);
+            }
+        }else
+        {
+            TOGGLE_LED_STATE();
+            vTaskDelay(50);
+        }
+    }
 }
 
-void _exit(int status)
+static void hwInit(void)
 {
-    while(1);
+	GPIO_InitTypeDef gpioInit;
+
+	/* Initialize LED */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
+
+	gpioInit.GPIO_Mode = GPIO_Mode_OUT;
+	gpioInit.GPIO_OType = GPIO_OType_PP;
+	gpioInit.GPIO_Pin = led_pin;
+	gpioInit.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	gpioInit.GPIO_Speed = GPIO_Speed_40MHz;
+
+	GPIO_Init(led_port, &gpioInit);
+
+	/* Initialise the button */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
+
+	gpioInit.GPIO_Mode = GPIO_Mode_IN;
+	gpioInit.GPIO_OType = GPIO_OType_PP;
+	gpioInit.GPIO_Pin = btn_pin;
+	gpioInit.GPIO_PuPd = GPIO_PuPd_UP;
+	gpioInit.GPIO_Speed = GPIO_Speed_400KHz;
+
+	GPIO_Init(btn_port, &gpioInit);
 }
