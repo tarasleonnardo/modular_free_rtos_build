@@ -61,7 +61,7 @@ set(MODULES
     app/blinky
     kernel/FreeRTOS
     platform/stm32/STM32L1xx/STM32L152
-    drivers/STM32L1xx_STD_PERIPH/STM32L1xx_Std_Periph
+    drivers/STM32L1xx_Std_Periph
    )
 
 ################################################################################################
